@@ -15,3 +15,7 @@ This simple fieldtype allows you to select an existing file from an Amazon S3 bu
 `{my_field:date}` and `{my_field:gmt_date}` - the last-modified date of your file. Accepts a standard EE `format` parameter for date formatting.
 
 This fieldtype uses Donovan Schönknecht's [Amazon S3 PHP Class](https://github.com/tpyo/amazon-s3-php-class/).
+
+### Change Log
+__v1.0.1__
+* Feature: Allow Cloudfront URLs

@@ -23,7 +23,7 @@ class S3_directory_ft extends EE_Fieldtype {
 
 	var $info = array(
 		'name'		=> 'S3 Directory',
-		'version'	=> '1.0.0'
+		'version'	=> '1.0.1'
 	);
  
  			
@@ -63,7 +63,7 @@ class S3_directory_ft extends EE_Fieldtype {
 	function _get_settings_fields()
 	{		
 		return array(
-			'access_key', 'secret_key', 'bucket'
+			'access_key', 'secret_key', 'bucket', 'cdn'
 		);
 	}
 		
@@ -71,10 +71,14 @@ class S3_directory_ft extends EE_Fieldtype {
 	
 	function save_settings($data)
 	{
+		$cdn = trim($this->EE->input->post('cdn'));
+		$cdn = str_replace(array('http://','https://'),'',$cdn); // Make sure they didn't enter http or https
+		$cdn = rtrim($cdn,'/'); // Trim the trailing slash
 		return array(
 			'access_key' => trim($this->EE->input->post('access_key')),
 			'secret_key' => trim($this->EE->input->post('secret_key')),
-			'bucket' => trim($this->EE->input->post('bucket'))
+			'bucket' => trim($this->EE->input->post('bucket')),
+			'cdn' => $cdn,
 		);
 	}
 	
@@ -147,7 +151,11 @@ class S3_directory_ft extends EE_Fieldtype {
 	{
 		$data = $this->_prepare_data($data);
 		$r = (isset($params['ssl'])) ? 'https://' : 'http://';
-		$r .= $this->settings['bucket'].'.s3.amazonaws.com/'.rawurlencode($data['name']);
+		if ($this->settings['cdn'] != '') { // Are we using a CDN?
+			$r .= $this->settings['cdn'].'/'.rawurlencode($data['name']);
+		} else {
+			$r .= $this->settings['bucket'].'.s3.amazonaws.com/'.rawurlencode($data['name']);
+		}
 		return $r;
 	}
 

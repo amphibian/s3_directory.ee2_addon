@@ -17,5 +17,13 @@ This simple fieldtype allows you to select an existing file from an Amazon S3 bu
 This fieldtype uses Donovan Schönknecht's [Amazon S3 PHP Class](https://github.com/tpyo/amazon-s3-php-class/).
 
 ### Change Log
-__v1.0.1__
-* Feature: Allow Cloudfront URLs
+
+**1.0.2**
+
+* Fixed EE 2.9 compatibility
+* Updated S3 PHP library
+* Now requires EE 2.6+
+
+**1.0.1**
+
+* Added Cloudfront URL setting

@@ -23,14 +23,13 @@ class S3_directory_ft extends EE_Fieldtype {
 
 	var $info = array(
 		'name'		=> 'S3 Directory',
-		'version'	=> '1.0.1'
+		'version'	=> '1.0.2'
 	);
  
  			
 	function __construct()
 	{
-		parent::EE_Fieldtype();
-		$this->EE->lang->loadfile('s3_directory');	
+		ee()->lang->loadfile('s3_directory');	
 	}
 
 
@@ -38,8 +37,8 @@ class S3_directory_ft extends EE_Fieldtype {
 	{
 		foreach($this->_get_settings_fields() as $setting)
 		{
-			$this->EE->table->add_row(
-				$this->EE->lang->line('s3_directory_'.$setting),
+			ee()->table->add_row(
+				ee()->lang->line('s3_directory_'.$setting),
 				form_input($setting, (isset($settings[$setting])) ? $settings[$setting] : '', 'id="'.$setting.'"')
 			);
 		}
@@ -52,7 +51,7 @@ class S3_directory_ft extends EE_Fieldtype {
 		foreach($this->_get_settings_fields() as $setting)
 		{
 			$r[] = array(
-				$this->EE->lang->line('s3_directory_'.$setting),
+				ee()->lang->line('s3_directory_'.$setting),
 				form_input($setting, (isset($settings[$setting])) ? $settings[$setting] : '')
 			);
 		}
@@ -71,13 +70,13 @@ class S3_directory_ft extends EE_Fieldtype {
 	
 	function save_settings($data)
 	{
-		$cdn = trim($this->EE->input->post('cdn'));
+		$cdn = trim(ee()->input->post('cdn'));
 		$cdn = str_replace(array('http://','https://'),'',$cdn); // Make sure they didn't enter http or https
 		$cdn = rtrim($cdn,'/'); // Trim the trailing slash
 		return array(
-			'access_key' => trim($this->EE->input->post('access_key')),
-			'secret_key' => trim($this->EE->input->post('secret_key')),
-			'bucket' => trim($this->EE->input->post('bucket')),
+			'access_key' => trim(ee()->input->post('access_key')),
+			'secret_key' => trim(ee()->input->post('secret_key')),
+			'bucket' => trim(ee()->input->post('bucket')),
 			'cdn' => $cdn,
 		);
 	}
@@ -135,7 +134,7 @@ class S3_directory_ft extends EE_Fieldtype {
 		}
 		else
 		{
-			$r = $this->EE->lang->line('s3_directory_not_setup');
+			$r = ee()->lang->line('s3_directory_not_setup');
 		}
 		return $r;
 	}
@@ -151,9 +150,12 @@ class S3_directory_ft extends EE_Fieldtype {
 	{
 		$data = $this->_prepare_data($data);
 		$r = (isset($params['ssl'])) ? 'https://' : 'http://';
-		if ($this->settings['cdn'] != '') { // Are we using a CDN?
+		if ($this->settings['cdn'] != '')
+		{ // Are we using a CDN?
 			$r .= $this->settings['cdn'].'/'.rawurlencode($data['name']);
-		} else {
+		}
+		else
+		{
 			$r .= $this->settings['bucket'].'.s3.amazonaws.com/'.rawurlencode($data['name']);
 		}
 		return $r;
@@ -186,7 +188,7 @@ class S3_directory_ft extends EE_Fieldtype {
 		$data = $this->_prepare_data($data);
 		if(isset($params['format']))
 		{
-			$r = $this->EE->localize->decode_date($params['format'], $data['time']);
+			$r = ee()->localize->format_date($params['format'], $data['time']);
 		}
 		else
 		{
@@ -201,7 +203,7 @@ class S3_directory_ft extends EE_Fieldtype {
 		$data = $this->_prepare_data($data);
 		if(isset($params['format']))
 		{
-			$r = $this->EE->localize->decode_date($params['format'], $data['time'], FALSE);
+			$r = ee()->localize->format_date($params['format'], $data['time'], FALSE);
 		}
 		else
 		{
